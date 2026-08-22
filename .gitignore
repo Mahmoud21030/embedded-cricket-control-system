@@ -1,0 +1,57 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+config.local.*
+secrets.*
+credentials.*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Dependencies and generated output
+node_modules/
+build/
+Build/
+Debug/
+Release/
+dist/
+coverage/
+slprj/
+*.slxc
+*.raw
+*.elf
+*.hex
+*.bin
+*.o
+*.a
+*.exe
+*.dll
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Editors and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.workspace
+*.bak
+*Security copy*
+
+# Large/reference documents and recordings
+*.zip
+*.rar
+*.7z
+*.doc
+*.docx
+*.ppt
+*.pptx
+*.pdf
+*.mp4
+*.wav
+*.m4a
+*.mp3
