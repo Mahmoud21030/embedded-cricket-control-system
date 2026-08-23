@@ -1,82 +1,127 @@
-# Embedded Cricket Control and Power-Electronics System
+# STM32 Cricket Bowling Machine Control
 
-Prototype control system for a two-motor cricket bowling machine, combining STM32 firmware, controlled converter/motor models, Proteus-oriented integration, and EasyEDA PCB evidence.
+![STM32 cricket bowling machine control](media/project-cover.png)
+
+An embedded motor-control and power-electronics prototype for a cricket bowling machine. The project combines **BLDC commutation and converter modeling in MATLAB/Simulink** with a **two-motor STM32F103 controller** using encoder feedback, PID regulation, ADC setpoints, and PWM drive outputs.
 
 > Commissioned engineering implementation; identifying client and submission details have been removed.
 
+## Engineering scope
+
+The repository brings together two related development tracks:
+
+1. **BLDC and power-stage modeling** — Hall-based commutation, speed control, current/voltage limiting, and buck/buck-boost converter models in Simulink.
+2. **Dual-motor embedded control** — STM32F103 firmware for two independently regulated launch-wheel motors, including encoder pulse measurement, speed calculation, PID control, and PWM duty updates.
+
+The result is a traceable prototype workflow from system modeling to firmware and PCB-level implementation evidence.
+
 ## My role
 
-**Embedded Control and Power-Electronics Developer**
+**Embedded Motor-Control and Power-Electronics Developer**
 
-## What I implemented
+I implemented and integrated:
 
-- STM32F103 firmware project
-- Two-motor control and converter simulation
-- Buck/buck-boost motor-control model variants
-- EasyEDA schematics and PCB layouts
-- Hardware/firmware integration assets
+- STM32F103 firmware and peripheral configuration
+- Dual quadrature-encoder pulse processing through GPIO interrupts
+- Independent PID speed-control paths for motor 1 and motor 2
+- ADC acquisition for speed, swing, and current-related inputs
+- Timer/PWM motor-drive outputs
+- BLDC commutation and speed-control modeling in MATLAB/Simulink
+- Buck and buck-boost converter control models
+- EasyEDA schematic and PCB design assets for the motor power stage
 
-## Architecture
+## System architecture
 
 ```mermaid
 flowchart LR
-  SET[Speed/settings] --> MCU[STM32 controller]
-  MCU -->|PWM| PWR[Converter + motor drivers]
-  PWR --> M1[Wheel motor 1]
-  PWR --> M2[Wheel motor 2]
-  MODEL[Simulink models] -. validate .-> PWR
-  PCB[EasyEDA hardware] -. implements .-> PWR
+  CMD[Speed and swing setpoints] --> ADC[STM32 ADC]
+  E1[Encoder 1] --> MCU[STM32F103 control firmware]
+  E2[Encoder 2] --> MCU
+  ADC --> MCU
+  MCU --> PID1[Motor 1 PID]
+  MCU --> PID2[Motor 2 PID]
+  PID1 --> PWM1[PWM + power stage 1]
+  PID2 --> PWM2[PWM + power stage 2]
+  PWM1 --> M1[Launch-wheel motor 1]
+  PWM2 --> M2[Launch-wheel motor 2]
+  SIM[BLDC + converter Simulink models] -. design validation .-> MCU
 ```
+
+## Visual evidence
+
+### BLDC commutation, converter and speed-control model
+
+![BLDC commutation and speed-control model](media/simulink-control-model.png)
+
+The model shows Hall-based commutation logic, a controlled converter, a discrete speed controller, and current/voltage constraint paths. It is modeling evidence and is not presented as a production-certified BLDC drive.
+
+### Dual-motor power-stage PCB
+
+![Dual-motor converter PCB](media/two_motor_pcb_3d.png)
+
+### Converter prototype PCB and schematic
+
+| Converter PCB | Dual-motor schematic |
+|---|---|
+| ![Buck-boost current-control PCB](media/converter_pcb_3d.png) | ![Dual-motor power-stage schematic](media/bowling_machine_schematic.png) |
+
+## Firmware evidence
+
+The included STM32 source demonstrates:
+
+- `HAL_GPIO_EXTI_Callback()` for two encoder channels
+- `M1_Calc_Speed()` and `M2_Calc_Speed()` for RPM estimation
+- Independent `Motor1_Main_fn()` and `Motor2_Main_fn()` PID loops
+- ADC channels for speed, swing, and current-related signals
+- Direct timer compare updates for PWM output
+
+See [`firmware/main.c`](firmware/main.c) and [`firmware/B1480.ioc`](firmware/B1480.ioc).
 
 ## Technologies
 
-- STM32F103
+- STM32F103 and STM32Cube/HAL
 - Embedded C
 - MATLAB/Simulink
-- Proteus
-- EasyEDA
-- Motor control
-- DC-DC conversion
-
-## Interfaces and protocols
-
-- ADC
-- PWM
-- GPIO
-- Timers
-- Motor-driver interfaces
+- BLDC commutation modeling
+- PID motor-speed control
+- ADC, GPIO interrupts, timers, and PWM
+- Encoder feedback
+- Buck and buck-boost conversion
+- EasyEDA and Proteus-oriented integration
 
 ## Repository structure
 
-- `firmware/` — STM32 source/configuration
-- `simulation/` — motor/converter models
-- `hardware/` — EasyEDA JSON
-- `media/` — schematic and PCB evidence
+```text
+firmware/    STM32 source and CubeMX configuration
+simulation/  Bowling-machine and converter/motor models
+hardware/    Sanitized EasyEDA schematic and PCB sources
+media/       Project cover, control-model, schematic and PCB renders
+```
 
-## Setup
+## Review and validation approach
 
-- Open the STM32Cube project and verify target/peripherals
-- Open the Simulink models in a compatible release
-- Import EasyEDA files to inspect the design
-- Validate the power stage with current limiting before physical motor tests
+- Compare speed setpoints with calculated encoder feedback
+- Exercise the two independent PID control paths
+- Inspect duty-cycle saturation and timer compare updates
+- Evaluate BLDC commutation and converter behavior in Simulink
+- Review schematic/PCB connectivity before any powered hardware test
+- Use current limiting and physical guarding for real motor testing
 
-## Testing and validation
+## Demonstrated result
 
-- Firmware peripheral review
-- Simulink speed/load scenarios
-- Circuit/PCB connectivity inspection
-- Proteus-oriented integration assets
-
-## Verified results
-
-- The staged repository links firmware, simulation, and hardware-design evidence for the same control application
-- Generated binaries, backups, reports, recordings, and downloaded references are excluded
+The repository demonstrates a complete engineering chain: BLDC and converter modeling, STM32 dual-motor control firmware, encoder-based feedback, and PCB-level power-stage design. It is suitable as proof of embedded motor-control and hardware/software integration capability.
 
 ## Limitations
 
-- Prototype, not a production-manufactured or safety-certified machine
-- Mechanical launch consistency and physical safety guards are outside the software repository
+- Prototype engineering work, not a production-manufactured or safety-certified bowling machine
+- No unsupported ball-speed, launch-accuracy, efficiency, or reliability figures are claimed
+- Mechanical feeding, guarding, and launcher construction are outside this repository
+- The BLDC commutation evidence is from the Simulink development track; the STM32 firmware evidence focuses on closed-loop dual-motor speed control
+
+## Related public case study
+
+An earlier one-motor presentation of the control concept is available on [Mostaql](https://mostaql.com/portfolio/2084648-criket-machine-one-motor).
 
 ## Security and privacy
 
-Credentials, personal identifiers, private reports, generated build output, downloaded references, and large raw recordings are intentionally excluded. Use the included example configuration files where applicable.
+Credentials, identifying client/student data, private reports, generated build output, downloaded references, and large raw recordings are intentionally excluded.
