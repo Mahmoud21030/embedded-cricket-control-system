@@ -109,17 +109,3 @@ media/       Project cover, control-model, schematic and PCB renders
 
 The repository demonstrates a complete engineering chain: BLDC and converter modeling, STM32 dual-motor control firmware, encoder-based feedback, and PCB-level power-stage design. It is suitable as proof of embedded motor-control and hardware/software integration capability.
 
-## Limitations
-
-- Prototype engineering work, not a production-manufactured or safety-certified bowling machine
-- No unsupported ball-speed, launch-accuracy, efficiency, or reliability figures are claimed
-- Mechanical feeding, guarding, and launcher construction are outside this repository
-- The BLDC commutation evidence is from the Simulink development track; the STM32 firmware evidence focuses on closed-loop dual-motor speed control
-
-## Related public case study
-
-An earlier one-motor presentation of the control concept is available on [Mostaql](https://mostaql.com/portfolio/2084648-criket-machine-one-motor).
-
-## Security and privacy
-
-Credentials, identifying client/student data, private reports, generated build output, downloaded references, and large raw recordings are intentionally excluded.
