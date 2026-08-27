@@ -1,6 +1,5 @@
 # STM32 Cricket Bowling Machine Control
 
-![STM32 cricket bowling machine control](media/project-cover.png)
 
 An embedded motor-control and power-electronics prototype for a cricket bowling machine. The project combines **BLDC commutation and converter modeling in MATLAB/Simulink** with a **two-motor STM32F103 controller** using encoder feedback, PID regulation, ADC setpoints, and PWM drive outputs.
 
