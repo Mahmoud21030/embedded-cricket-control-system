@@ -3,7 +3,6 @@
 
 An embedded motor-control and power-electronics prototype for a cricket bowling machine. The project combines **BLDC commutation and converter modeling in MATLAB/Simulink** with a **two-motor STM32F103 controller** using encoder feedback, PID regulation, ADC setpoints, and PWM drive outputs.
 
-> Commissioned engineering implementation; identifying client and submission details have been removed.
 
 ## Engineering scope
 
